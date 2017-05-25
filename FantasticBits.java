@@ -15,13 +15,24 @@ class Player {
         System.err.println (msg);
     }
     
+    enum Status {
+        GRABBED (1),
+    	OTHERWISE (0);
+    	
+    	public int value;
+    	
+    	private Status(int value)  {
+    		this.value = value;
+    	}
+    }
+    
     public static class Wizard {
         int wizardId = 10;
         int x;
         int y;
         int vx;
         int vy;
-        int state;
+        Status state;
                 
         public void setWizardId(int id) {
             wizardId = id;
@@ -65,7 +76,7 @@ class Player {
         int y;
         int vx;
         int vy;
-        int state;
+        Status state;
         boolean onField;
         int wizardId;
         
@@ -147,19 +158,6 @@ class Player {
                 
                 if (entityType.equals("WIZARD")) {
                     setWizard(wizards, entityId, x, y, vx, vy);
-                    /*for (int aux = 0; aux < wizards.length; aux++) {
-                        if (wizards[aux].getWizardId() == 10) {
-                            wizards[aux].setWizardId(entityId);
-                            debug(wizards[aux].getWizardId());
-                            aux = wizards.length;
-                        }
-                        else {
-                            if (wizards[aux].getWizardId() == entityId) {
-                                setCoord(wizards[aux], x, y, vx, vy);
-                                debug(wizards[aux].getX());
-                            }
-                        }
-                    }*/
                 }
                 
                 if (entityType.equals("SNAFFLE")) {
@@ -200,7 +198,7 @@ class Player {
         for (int aux = 0; aux < snaffles.length; aux++) {
             if (snaffles[aux].getSnaffleId() == 20) {
                 snaffles[aux].setSnaffleId(entityId);
-                debug("snaf: " + snaffles[aux].getSnaffleId();
+                debug("snaf: " + snaffles[aux].getSnaffleId());
                 aux = snaffles.length;
             }
             else {
