@@ -227,6 +227,8 @@ class Player {
             else {
                 if (snaffles[aux].getSnaffleId() == entityId) {
                     setCoord(snaffles[aux], x, y, vx, vy);
+                    
+                    snaffles[aux].setState(setState(state));
                 }
             }
         }
