@@ -68,6 +68,13 @@ class Player {
         public int getVy() {
             return vy;
         }
+        
+        public void setState(Status status_) {
+            state = status_;
+        }
+        public Status getState() {
+            return state;
+        }
     }
     
     public static class Snaffle {
@@ -114,6 +121,13 @@ class Player {
         public int getVy() {
             return vy;
         }
+        
+        public void setState(Status status_) {
+            state = status_;
+        }
+        public Status getState() {
+            return state;
+        }
     }
 
     public static void main(String args[]) {
@@ -157,11 +171,11 @@ class Player {
                 int state = in.nextInt(); // 1 if the wizard is holding a Snaffle, 0 otherwise
                 
                 if (entityType.equals("WIZARD")) {
-                    setWizard(wizards, entityId, x, y, vx, vy);
+                    setWizard(wizards, entityId, x, y, vx, vy, state);
                 }
                 
                 if (entityType.equals("SNAFFLE")) {
-                    setSnaffle(snaffles, entityId, x, y, vx, vy);
+                    setSnaffle(snaffles, entityId, x, y, vx, vy, state);
                 }
             }
             
@@ -178,27 +192,36 @@ class Player {
         }
     }
     
-    public static void setWizard(Wizard[] wizards, int entityId, int x, int y, int vx, int vy) {
+    public static void setWizard(Wizard[] wizards, int entityId, int x, int y, int vx, int vy, int state) {
         for (int aux = 0; aux < wizards.length; aux++) {
             if (wizards[aux].getWizardId() == 10) {
                 wizards[aux].setWizardId(entityId);
-                debug("wiz: " + wizards[aux].getWizardId());
+                setCoord(wizards[aux], x, y, vx, vy);
+                
+                wizards[aux].setState(setState(state));
+                
                 aux = wizards.length;
             }
             else {
                 if (wizards[aux].getWizardId() == entityId) {
                     setCoord(wizards[aux], x, y, vx, vy);
+                    
+                    wizards[aux].setState(setState(state));
+                    
                     debug(wizards[aux].getX());
                 }
             }
         }
     }
     
-    public static void setSnaffle(Snaffle[] snaffles, int entityId, int x, int y, int vx, int vy) {
+    public static void setSnaffle(Snaffle[] snaffles, int entityId, int x, int y, int vx, int vy, int state) {
         for (int aux = 0; aux < snaffles.length; aux++) {
             if (snaffles[aux].getSnaffleId() == 20) {
                 snaffles[aux].setSnaffleId(entityId);
-                debug("snaf: " + snaffles[aux].getSnaffleId());
+                setCoord(snaffles[aux], x, y, vx, vy);
+                
+                snaffles[aux].setState(setState(state));
+                
                 aux = snaffles.length;
             }
             else {
@@ -220,5 +243,18 @@ class Player {
         snaf.setY(y);
         snaf.setVx(vx);
         snaf.setVy(vy);
+    }
+    
+    public static Status setState (int state) {
+        switch (state) {
+            case 0:
+                return Status.OTHERWISE;
+                //break;
+            case 1:
+                return Status.GRABBED;
+                //break;
+            default:
+                return null;
+        }
     }
 }
