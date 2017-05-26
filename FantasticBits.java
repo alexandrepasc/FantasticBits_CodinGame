@@ -262,9 +262,12 @@ class Player {
         }
     }
     
-    public static int getDistance (Wizard wizard, Snaffle[] snaffles) {
-        for () {
+    public static int getCloser (Wizard wizard, Snaffle[] snaffles) {
+        for (Snaffle i:snaffles) {
             
         }
+    }
+    public static int getDistance () {
+    	
     }
 }
