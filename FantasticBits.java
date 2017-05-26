@@ -196,6 +196,7 @@ class Player {
         for (int aux = 0; aux < wizards.length; aux++) {
             if (wizards[aux].getWizardId() == 10) {
                 wizards[aux].setWizardId(entityId);
+                
                 setCoord(wizards[aux], x, y, vx, vy);
                 
                 wizards[aux].setState(setState(state));
@@ -218,6 +219,7 @@ class Player {
         for (int aux = 0; aux < snaffles.length; aux++) {
             if (snaffles[aux].getSnaffleId() == 20) {
                 snaffles[aux].setSnaffleId(entityId);
+                
                 setCoord(snaffles[aux], x, y, vx, vy);
                 
                 snaffles[aux].setState(setState(state));
@@ -257,6 +259,12 @@ class Player {
                 //break;
             default:
                 return null;
+        }
+    }
+    
+    public static int getDistance (Wizard wizard, Snaffle[] snaffles) {
+        for () {
+            
         }
     }
 }
