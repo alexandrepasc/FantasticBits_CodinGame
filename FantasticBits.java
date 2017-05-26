@@ -262,12 +262,45 @@ class Player {
         }
     }
     
-    public static int getCloser (Wizard wizard, Snaffle[] snaffles) {
-        for (Snaffle i:snaffles) {
-            
-        }
-    }
-    public static int getDistance () {
+    public void targetSnaffle(Wizard[] wizards, Snaffle[] snaffles) {
+    	double[][][] distWizSnaf = new double[wizards.length][snaffles.length][snaffles.length];
     	
+    	for (int i = 0; i < wizards.length; i++) {
+    		for (int o = 0; o < snaffles.length; o++) {
+    			distWizSnaf[i][o][0] = snaffles[o].getSnaffleId();
+    			distWizSnaf[i][o][1] = getDistance(wizards[i].getX(), wizards[i].getY(), snaffles[o].getX(), snaffles[o].getY());
+            }
+    	}
+    	
+    	double compare = 17671;
+    	int arrayPos[] = new int[wizards.length];
+    	
+    	for (int i = 0; i < wizards.length; i++) {
+    		for (int o = 0; o < snaffles.length; o++) {
+    			double aux = compareDist(distWizSnaf[i][o][1]);
+    			if (aux != compare) {
+    				compare = aux;
+    				arrayPos[i] = o;
+    			}
+    		}
+    	}
+    }
+
+    public static double compareDist(double value, double compare) {
+    	if (value < compare) {
+    		return value;
+    	}
+    	else {
+    		return compare;
+    	}
+    }
+    public static int getCloser(Wizard wizard, Snaffle[] snaffles) {
+        
+    }
+    public static double getDistance(int wizX, int wizY, int snafX, int snafY) {
+    	int a = Math.abs(wizX - snafX);
+    	int b = Math.abs(wizY - snafY);
+    	
+    	return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
     }
 }
