@@ -36,6 +36,7 @@ class Player {
         
         int targetX;
         int targetY;
+        int targetId:
                 
         public void setWizardId(int id) {
             wizardId = id;
@@ -80,10 +81,24 @@ class Player {
         }
         
         public void setTargetX(int x) {
-        	targetx = x;
+        	targetX = x;
         }
         public int getTargetX() {
         	return targetX;
+        }
+        
+        public void setTargetY(int y) {
+        	targetY = y;
+        }
+        public int getTargetY() {
+        	return targetY;
+        }
+        
+        public void setTargetId(int id) {
+        	targetId = id;
+        }
+        public int getTargetId() {
+        	return targetId;
         }
     }
     
@@ -189,6 +204,8 @@ class Player {
                 }
             }
             
+            targetSnaffle(wizards, snaffles);
+            
             for (int i = 0; i < 2; i++) {
 
                 // Write an action using System.out.println()
@@ -197,7 +214,9 @@ class Player {
 
                 // Edit this line to indicate the action for each wizard (0 ≤ thrust ≤ 150, 0 ≤ power ≤ 500)
                 // i.e.: "MOVE x y thrust" or "THROW x y power"
-                System.out.println("MOVE 8000 3750 100");
+            	System.out.println("MOVE " + wizards[i].getTargetX() + " " + wizards[i].getTargetY() + " 100")
+            	
+                //System.out.println("MOVE 8000 3750 100");
             }
         }
     }
@@ -295,11 +314,25 @@ class Player {
     		}
     	}
     	
-    	if (arrayPos[0] == arrayPos[1]) {
+    	for (int i = 0; i < wizards.length; i++) {
+    		targId = distWizSnaf[i][arrayPos[i]][0];
+    		
+    		for (int o = 0; o < snaffles.length; o++) {
+    			if (targId == snaffles[o].getSnaffleId()) {
+    				wizards[i].setTargetX(snaffles[o].getX());
+    				wizards[i].setTargetY(snaffles[o].getY());
+    				wizards[i].setTargetId(snaffles[o].getSnaffleId());
+    			}
+    		}
+    		
+    		
+    	}
+    	
+    	/*if (arrayPos[0] == arrayPos[1]) {
     		if (distWizSnaf[0] < ) {
     			
     		}
-    	}
+    	}*/
     }
 
     public static double compareDist(double value, double compare) {
@@ -310,9 +343,9 @@ class Player {
     		return compare;
     	}
     }
-    public static int getCloser(Wizard wizard, Snaffle[] snaffles) {
+    /*public static int getCloser(Wizard wizard, Snaffle[] snaffles) {
         
-    }
+    }*/
     public static double getDistance(int wizX, int wizY, int snafX, int snafY) {
     	int a = Math.abs(wizX - snafX);
     	int b = Math.abs(wizY - snafY);
