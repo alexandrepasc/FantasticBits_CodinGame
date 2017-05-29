@@ -33,6 +33,9 @@ class Player {
         int vx;
         int vy;
         Status state;
+        
+        int targetX;
+        int targetY;
                 
         public void setWizardId(int id) {
             wizardId = id;
@@ -74,6 +77,13 @@ class Player {
         }
         public Status getState() {
             return state;
+        }
+        
+        public void setTargetX(int x) {
+        	targetx = x;
+        }
+        public int getTargetX() {
+        	return targetX;
         }
     }
     
@@ -282,6 +292,12 @@ class Player {
     				compare = aux;
     				arrayPos[i] = o;
     			}
+    		}
+    	}
+    	
+    	if (arrayPos[0] == arrayPos[1]) {
+    		if (distWizSnaf[0] < ) {
+    			
     		}
     	}
     }
