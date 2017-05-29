@@ -206,6 +206,8 @@ class Player {
                 }
             }
             
+            setNoInGameSnaf(snaffles, entities);
+            
             /*for (int i = 0; i < snaffles.length; i++) {
             	debug("x: " + snaffles[i].getX());
             	debug("y: " + snaffles[i].getY());
@@ -270,14 +272,19 @@ class Player {
                     setCoord(snaffles[aux], x, y, vx, vy);
                     
                     snaffles[aux].setState(setState(state));
-                    
-                    /*debug("x: " + snaffles[aux].getX());
-                    debug("y: " + snaffles[aux].getY());*/
                 }
             }
-            /*debug("x: " + snaffles[aux].getX());
-            debug("y: " + snaffles[aux].getY());*/
         }
+    }
+    
+    public static void setNoInGameSnaf(Snaffle[] snaffles, int entities) {
+    	int gameSnaf = entities - 4;
+    	
+    	if (snaffles.length > gameSnaf) {
+    		for (int i = gameSnaf; i < snaffles.length; i++) {
+    			snaffles[i].setSnaffleId(100);
+    		}
+    	}
     }
     
     public static void setCoord(Wizard wiz, int x, int y, int vx, int vy) {
@@ -397,9 +404,6 @@ class Player {
     		return compare;
     	}
     }
-    /*public static int getCloser(Wizard wizard, Snaffle[] snaffles) {
-        
-    }*/
     public static double getDistance(int wizX, int wizY, int snafX, int snafY) {
     	int a = Math.abs(wizX - snafX);
     	int b = Math.abs(wizY - snafY);
