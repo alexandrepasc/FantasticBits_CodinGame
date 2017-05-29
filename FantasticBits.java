@@ -27,7 +27,7 @@ class Player {
     }
     
     public static class Wizard {
-        int wizardId = 10;
+        int wizardId = 100;
         int x;
         int y;
         int vx;
@@ -230,7 +230,7 @@ class Player {
     
     public static void setWizard(Wizard[] wizards, int entityId, int x, int y, int vx, int vy, int state) {
         for (int aux = 0; aux < wizards.length; aux++) {
-            if (wizards[aux].getWizardId() == 10) {
+            if (wizards[aux].getWizardId() == 100) {
                 wizards[aux].setWizardId(entityId);
                 
                 setCoord(wizards[aux], x, y, vx, vy);
@@ -259,7 +259,7 @@ class Player {
             if (snaffles[aux].getSnaffleId() == 100) {
                 snaffles[aux].setSnaffleId(entityId);
                 
-                setCoord(snaffles, x, y, vx, vy, aux);
+                setCoord(snaffles[aux], x, y, vx, vy);
                 
                 snaffles[aux].setState(setState(state));
                 
@@ -267,12 +267,12 @@ class Player {
             }
             else {
                 if (snaffles[aux].getSnaffleId() == entityId) {
-                    setCoord(snaffles, x, y, vx, vy, aux);
+                    setCoord(snaffles[aux], x, y, vx, vy);
                     
                     snaffles[aux].setState(setState(state));
                     
                     /*debug("x: " + snaffles[aux].getX());
-                    debug("y: " + snaffles[aux].getY());
+                    debug("y: " + snaffles[aux].getY());*/
                 }
             }
             /*debug("x: " + snaffles[aux].getX());
@@ -286,11 +286,11 @@ class Player {
         wiz.setVx(vx);
         wiz.setVy(vy);
     }
-    public static void setCoord(Snaffle[] snaf, int x, int y, int vx, int vy, int num) {
-        snaf[num].setX(x);
-        snaf[num].setY(y);
-        snaf[num].setVx(vx);
-        snaf[num].setVy(vy);
+    public static void setCoord(Snaffle snaf, int x, int y, int vx, int vy) {
+        snaf.setX(x);
+        snaf.setY(y);
+        snaf.setVx(vx);
+        snaf.setVy(vy);
     }
     
     public static Status setState (int state) {
@@ -339,19 +339,58 @@ class Player {
     				wizards[i].setTargetId(snaffles[o].getSnaffleId());
     			}
     		}
-    		
-    		
     	}
     	
-    	/*if (arrayPos[0] == arrayPos[1]) {
-    		if (distWizSnaf[0] < ) {
+    	if (arrayPos[0] == arrayPos[1]) {
+    		if (distWizSnaf[0][arrayPos[0]][1] < distWizSnaf[1][arrayPos[0]][1]) {
+    			int targId = (int) getNewWizardTarget(arrayPos[1], distWizSnaf[1], snaffles.length);
     			
+    			for (int o = 0; o < snaffles.length; o++) {
+        			if (targId == snaffles[o].getSnaffleId()) {
+        				wizards[1].setTargetX(snaffles[o].getX());
+        				wizards[1].setTargetY(snaffles[o].getY());
+        				wizards[1].setTargetId(snaffles[o].getSnaffleId());
+        			}
+        		}
     		}
-    	}*/
+    		else if (distWizSnaf[0][arrayPos[0]][1] > distWizSnaf[1][arrayPos[0]][1]) {
+    			int targId = (int) getNewWizardTarget(arrayPos[0], distWizSnaf[0], snaffles.length);
+    			
+    			for (int o = 0; o < snaffles.length; o++) {
+        			if (targId == snaffles[o].getSnaffleId()) {
+        				wizards[0].setTargetX(snaffles[o].getX());
+        				wizards[0].setTargetY(snaffles[o].getY());
+        				wizards[0].setTargetId(snaffles[o].getSnaffleId());
+        			}
+        		}
+    		}
+    	}
+    }
+    
+    public static double getNewWizardTarget(int arrayPos, double[][] distWizSnaf, int length) {
+    	double compare = 17671;
+    	
+    	for (int i = 0; i < length; i++) {
+    		double aux = compareDist(distWizSnaf[i][1], distWizSnaf[arrayPos][1], compare);
+    		if (aux != compare) {
+				compare = aux;
+				arrayPos = i;
+			}
+    	}
+    	
+    	return distWizSnaf[arrayPos][0];
     }
 
     public static double compareDist(double value, double compare) {
     	if (value < compare) {
+    		return value;
+    	}
+    	else {
+    		return compare;
+    	}
+    }
+    public static double compareDist(double value, double compareMin, double compare) {
+    	if ((value > compareMin) && (value < compare)) {
     		return value;
     	}
     	else {
