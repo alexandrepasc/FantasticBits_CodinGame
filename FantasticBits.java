@@ -27,12 +27,16 @@ class Player {
     }
     
     public static class Wizard {
-        int wizardId = 10;
+        int wizardId = 100;
         int x;
         int y;
         int vx;
         int vy;
         Status state;
+        
+        int targetX;
+        int targetY;
+        int targetId;
                 
         public void setWizardId(int id) {
             wizardId = id;
@@ -75,10 +79,31 @@ class Player {
         public Status getState() {
             return state;
         }
+        
+        public void setTargetX(int x) {
+        	targetX = x;
+        }
+        public int getTargetX() {
+        	return targetX;
+        }
+        
+        public void setTargetY(int y) {
+        	targetY = y;
+        }
+        public int getTargetY() {
+        	return targetY;
+        }
+        
+        public void setTargetId(int id) {
+        	targetId = id;
+        }
+        public int getTargetId() {
+        	return targetId;
+        }
     }
     
     public static class Snaffle {
-        int snaffleId = 20;
+        int snaffleId = 100;
         int x;
         int y;
         int vx;
@@ -88,10 +113,10 @@ class Player {
         int wizardId;
         
         public void setSnaffleId(int id) {
-            wizardId = id;
+        	snaffleId = id;
         }
         public int getSnaffleId() {
-            return wizardId;
+            return snaffleId;
         }
         
         public void setX(int coord) {
@@ -175,9 +200,18 @@ class Player {
                 }
                 
                 if (entityType.equals("SNAFFLE")) {
+                	/*debug("x: " + x);
+                    debug("y: " + y);*/
                     setSnaffle(snaffles, entityId, x, y, vx, vy, state);
                 }
             }
+            
+            /*for (int i = 0; i < snaffles.length; i++) {
+            	debug("x: " + snaffles[i].getX());
+            	debug("y: " + snaffles[i].getY());
+            }*/
+            
+            targetSnaffle(wizards, snaffles);
             
             for (int i = 0; i < 2; i++) {
 
@@ -187,15 +221,18 @@ class Player {
 
                 // Edit this line to indicate the action for each wizard (0 ≤ thrust ≤ 150, 0 ≤ power ≤ 500)
                 // i.e.: "MOVE x y thrust" or "THROW x y power"
-                System.out.println("MOVE 8000 3750 100");
+            	System.out.println("MOVE " + wizards[i].getTargetX() + " " + wizards[i].getTargetY() + " 100");
+            	
+                //System.out.println("MOVE 8000 3750 100");
             }
         }
     }
     
     public static void setWizard(Wizard[] wizards, int entityId, int x, int y, int vx, int vy, int state) {
         for (int aux = 0; aux < wizards.length; aux++) {
-            if (wizards[aux].getWizardId() == 10) {
+            if (wizards[aux].getWizardId() == 100) {
                 wizards[aux].setWizardId(entityId);
+                
                 setCoord(wizards[aux], x, y, vx, vy);
                 
                 wizards[aux].setState(setState(state));
@@ -208,16 +245,20 @@ class Player {
                     
                     wizards[aux].setState(setState(state));
                     
-                    debug(wizards[aux].getX());
+                    /*debug(wizards[aux].getX());
+                    debug(wizards[aux].getY());*/
                 }
             }
+            /*debug("x: " + wizards[aux].getX());
+            debug("y: " + wizards[aux].getY());*/
         }
     }
     
     public static void setSnaffle(Snaffle[] snaffles, int entityId, int x, int y, int vx, int vy, int state) {
         for (int aux = 0; aux < snaffles.length; aux++) {
-            if (snaffles[aux].getSnaffleId() == 20) {
+            if (snaffles[aux].getSnaffleId() == 100) {
                 snaffles[aux].setSnaffleId(entityId);
+                
                 setCoord(snaffles[aux], x, y, vx, vy);
                 
                 snaffles[aux].setState(setState(state));
@@ -229,8 +270,13 @@ class Player {
                     setCoord(snaffles[aux], x, y, vx, vy);
                     
                     snaffles[aux].setState(setState(state));
+                    
+                    /*debug("x: " + snaffles[aux].getX());
+                    debug("y: " + snaffles[aux].getY());*/
                 }
             }
+            /*debug("x: " + snaffles[aux].getX());
+            debug("y: " + snaffles[aux].getY());*/
         }
     }
     
@@ -258,5 +304,106 @@ class Player {
             default:
                 return null;
         }
+    }
+    
+    public static void targetSnaffle(Wizard[] wizards, Snaffle[] snaffles) {
+    	double[][][] distWizSnaf = new double[wizards.length][snaffles.length][snaffles.length];
+    	
+    	for (int i = 0; i < wizards.length; i++) {
+    		for (int o = 0; o < snaffles.length; o++) {
+    			distWizSnaf[i][o][0] = snaffles[o].getSnaffleId();
+    			distWizSnaf[i][o][1] = getDistance(wizards[i].getX(), wizards[i].getY(), snaffles[o].getX(), snaffles[o].getY());
+            }
+    	}
+    	
+    	double compare = 17671;
+    	int arrayPos[] = new int[wizards.length];
+    	
+    	for (int i = 0; i < wizards.length; i++) {
+    		for (int o = 0; o < snaffles.length; o++) {
+    			double aux = compareDist(distWizSnaf[i][o][1], compare);
+    			if (aux != compare) {
+    				compare = aux;
+    				arrayPos[i] = o;
+    			}
+    		}
+    	}
+    	
+    	for (int i = 0; i < wizards.length; i++) {
+    		int targId = (int) distWizSnaf[i][arrayPos[i]][0];
+    		
+    		for (int o = 0; o < snaffles.length; o++) {
+    			if (targId == snaffles[o].getSnaffleId()) {
+    				wizards[i].setTargetX(snaffles[o].getX());
+    				wizards[i].setTargetY(snaffles[o].getY());
+    				wizards[i].setTargetId(snaffles[o].getSnaffleId());
+    			}
+    		}
+    	}
+    	
+    	if (arrayPos[0] == arrayPos[1]) {
+    		if (distWizSnaf[0][arrayPos[0]][1] < distWizSnaf[1][arrayPos[0]][1]) {
+    			int targId = (int) getNewWizardTarget(arrayPos[1], distWizSnaf[1], snaffles.length);
+    			
+    			for (int o = 0; o < snaffles.length; o++) {
+        			if (targId == snaffles[o].getSnaffleId()) {
+        				wizards[1].setTargetX(snaffles[o].getX());
+        				wizards[1].setTargetY(snaffles[o].getY());
+        				wizards[1].setTargetId(snaffles[o].getSnaffleId());
+        			}
+        		}
+    		}
+    		else if (distWizSnaf[0][arrayPos[0]][1] > distWizSnaf[1][arrayPos[0]][1]) {
+    			int targId = (int) getNewWizardTarget(arrayPos[0], distWizSnaf[0], snaffles.length);
+    			
+    			for (int o = 0; o < snaffles.length; o++) {
+        			if (targId == snaffles[o].getSnaffleId()) {
+        				wizards[0].setTargetX(snaffles[o].getX());
+        				wizards[0].setTargetY(snaffles[o].getY());
+        				wizards[0].setTargetId(snaffles[o].getSnaffleId());
+        			}
+        		}
+    		}
+    	}
+    }
+    
+    public static double getNewWizardTarget(int arrayPos, double[][] distWizSnaf, int length) {
+    	double compare = 17671;
+    	
+    	for (int i = 0; i < length; i++) {
+    		double aux = compareDist(distWizSnaf[i][1], distWizSnaf[arrayPos][1], compare);
+    		if (aux != compare) {
+				compare = aux;
+				arrayPos = i;
+			}
+    	}
+    	
+    	return distWizSnaf[arrayPos][0];
+    }
+
+    public static double compareDist(double value, double compare) {
+    	if (value < compare) {
+    		return value;
+    	}
+    	else {
+    		return compare;
+    	}
+    }
+    public static double compareDist(double value, double compareMin, double compare) {
+    	if ((value > compareMin) && (value < compare)) {
+    		return value;
+    	}
+    	else {
+    		return compare;
+    	}
+    }
+    /*public static int getCloser(Wizard wizard, Snaffle[] snaffles) {
+        
+    }*/
+    public static double getDistance(int wizX, int wizY, int snafX, int snafY) {
+    	int a = Math.abs(wizX - snafX);
+    	int b = Math.abs(wizY - snafY);
+    	
+    	return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
     }
 }
