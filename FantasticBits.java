@@ -145,6 +145,9 @@ class Player {
         public void setGoalDistDefault() {
         	goalDist = 17675;
         }
+        public double getGoalDistDefault() {
+        	return 17675;
+        }
     }
     
     public static class Snaffle {
@@ -154,7 +157,7 @@ class Player {
         int vx;
         int vy;
         Status state;
-        boolean onField;
+        boolean onField = true;
         int wizardId;
         
         public void setSnaffleId(int id) {
@@ -201,6 +204,13 @@ class Player {
         public Status getState() {
             return state;
         }
+        
+        public void setOnField(boolean on) {
+        	onField = on;
+        }
+        public boolean getOnField() {
+        	return onField;
+        }
     }
 
     public static void main(String args[]) {
@@ -211,10 +221,10 @@ class Player {
         int goalY = 3750;
         
         if (myTeamId == 0) {
-            goalX = 0;
+            goalX = 16000;
         }
         else {
-            goalX = 16000;
+            goalX = 0;
         }
         
         Wizard[] wizards = new Wizard[2];
@@ -286,7 +296,9 @@ class Player {
 
                 // Edit this line to indicate the action for each wizard (0 ≤ thrust ≤ 150, 0 ≤ power ≤ 500)
                 // i.e.: "MOVE x y thrust" or "THROW x y power"
-            	System.out.println("MOVE " + wizards[i].getTargetX() + " " + wizards[i].getTargetY() + " 150");
+            	System.out.println(wizards[i].getAction() + " " + wizards[i].getTargetX() + " " + wizards[i].getTargetY() + " " + wizards[i].getActionVal());
+            	
+            	//System.out.println("MOVE " + wizards[i].getTargetX() + " " + wizards[i].getTargetY() + " 150");
             	
                 //System.out.println("MOVE 8000 3750 100");
             }
@@ -346,6 +358,7 @@ class Player {
     	if (snaffles.length > gameSnaf) {
     		for (int i = gameSnaf; i < snaffles.length; i++) {
     			snaffles[i].setSnaffleIdDefault();
+    			snaffles[i].setOnField(false);
     		}
     	}
     }
@@ -382,7 +395,13 @@ class Player {
     	for (int i = 0; i < wizards.length; i++) {
     		for (int o = 0; o < snaffles.length; o++) {
     			distWizSnaf[i][o][0] = snaffles[o].getSnaffleId();
-    			distWizSnaf[i][o][1] = getDistance(wizards[i].getX(), wizards[i].getY(), snaffles[o].getX(), snaffles[o].getY());
+    			
+    			if (snaffles[o].getOnField()) {
+    				distWizSnaf[i][o][1] = getDistance(wizards[i].getX(), wizards[i].getY(), snaffles[o].getX(), snaffles[o].getY());
+    			}
+    			else {
+    				distWizSnaf[i][o][1] = wizards[i].getGoalDistDefault();
+    			}
             }
     	}
     	
@@ -450,8 +469,8 @@ class Player {
     	wizards[1].setAction(Actions.MOVE);
     	wizards[1].setActionVal(150);*/
     }
-    public static int targetSnaffle(Wizard wizard, Snaffle[] snaffles) {
-    	double[][] distWizSnaf = new double[wizards.length][snaffles.length][snaffles.length];
+    /*public static int targetSnaffle(Wizard wizard, Snaffle[] snaffles) {
+    	double[][] distWizSnaf = new double[snaffles.length][snaffles.length];
     	
     	//for (int i = 0; i < wizards.length; i++) {
 		for (int o = 0; o < snaffles.length; o++) {
@@ -478,43 +497,13 @@ class Player {
 		
 		for (int o = 0; o < snaffles.length; o++) {
 			if (targId == snaffles[o].getSnaffleId()) {
-				/*wizards[i].setTargetX(snaffles[o].getX());
-				wizards[i].setTargetY(snaffles[o].getY());*/
 				setWizTargetCoords(wizard, snaffles[o].getX(), snaffles[o].getY());
 				wizard.setTargetId(snaffles[o].getSnaffleId());
 			}
 		}
     	//}
 		return arrayPos;
-    	
-    	/*if (arrayPos[0] == arrayPos[1]) {
-    		if (distWizSnaf[0][arrayPos[0]][1] < distWizSnaf[1][arrayPos[0]][1]) {
-    			int targId = (int) getNewWizardTarget(arrayPos[1], distWizSnaf[1], snaffles.length);
-    			
-    			for (int o = 0; o < snaffles.length; o++) {
-        			if (targId == snaffles[o].getSnaffleId()) {
-        				setWizTargetCoords(wizards[1], snaffles[o].getX(), snaffles[o].getY());
-        				wizards[1].setTargetId(snaffles[o].getSnaffleId());
-        			}
-        		}
-    		}
-    		else if (distWizSnaf[0][arrayPos[0]][1] > distWizSnaf[1][arrayPos[0]][1]) {
-    			int targId = (int) getNewWizardTarget(arrayPos[0], distWizSnaf[0], snaffles.length);
-    			
-    			for (int o = 0; o < snaffles.length; o++) {
-        			if (targId == snaffles[o].getSnaffleId()) {
-        				setWizTargetCoords(wizards[0], snaffles[o].getX(), snaffles[o].getY());
-        				wizards[0].setTargetId(snaffles[o].getSnaffleId());
-        			}
-        		}
-    		}
-    	}
-    	
-    	wizards[0].setAction(Actions.MOVE);
-    	wizards[0].setActionVal(150);
-    	wizards[1].setAction(Actions.MOVE);
-    	wizards[1].setActionVal(150);*/
-    }
+    }*/
     
     public static void setWizTargetCoords(Wizard wizard, int targetX, int targetY) {
     	wizard.setTargetX(targetX);
