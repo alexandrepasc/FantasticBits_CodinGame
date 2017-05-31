@@ -421,7 +421,7 @@ class Player {
     	for (int i = 0; i < wizards.length; i++) {
     		int targId = (int) distWizSnaf[i][arrayPos[i]][0];
     		
-    		if (wizards[i].getTargetId() == 100) {
+    		if (!wizards[i].getToGoal()) {
     		
 	    		for (int o = 0; o < snaffles.length; o++) {
 	    			if (targId == snaffles[o].getSnaffleId()) {
@@ -432,35 +432,49 @@ class Player {
 	    		    	wizards[i].setActionVal(150);
 	    			}
 	    		}
+	    		
     		}
+    		
     	}
     	
     	if (arrayPos[0] == arrayPos[1]) {
     		if (distWizSnaf[0][arrayPos[0]][1] < distWizSnaf[1][arrayPos[0]][1]) {
-    			int targId = (int) getNewWizardTarget(arrayPos[1], distWizSnaf[1], snaffles.length);
     			
-    			for (int o = 0; o < snaffles.length; o++) {
-        			if (targId == snaffles[o].getSnaffleId()) {
-        				setWizTargetCoords(wizards[1], snaffles[o].getX(), snaffles[o].getY());
-        				wizards[1].setTargetId(snaffles[o].getSnaffleId());
-        				
-        				wizards[1].setAction(Actions.MOVE);
-        		    	wizards[1].setActionVal(150);
-        			}
-        		}
+    			if (!wizards[1].getToGoal()) {
+    			
+	    			int targId = (int) getNewWizardTarget(arrayPos[1], distWizSnaf[1], snaffles.length);
+	    			
+	    			for (int o = 0; o < snaffles.length; o++) {
+	        			if (targId == snaffles[o].getSnaffleId()) {
+	        				setWizTargetCoords(wizards[1], snaffles[o].getX(), snaffles[o].getY());
+	        				wizards[1].setTargetId(snaffles[o].getSnaffleId());
+	        				
+	        				wizards[1].setAction(Actions.MOVE);
+	        		    	wizards[1].setActionVal(150);
+	        			}
+	        		}
+	    			
+    			}
+    			
     		}
     		else if (distWizSnaf[0][arrayPos[0]][1] > distWizSnaf[1][arrayPos[0]][1]) {
-    			int targId = (int) getNewWizardTarget(arrayPos[0], distWizSnaf[0], snaffles.length);
     			
-    			for (int o = 0; o < snaffles.length; o++) {
-        			if (targId == snaffles[o].getSnaffleId()) {
-        				setWizTargetCoords(wizards[0], snaffles[o].getX(), snaffles[o].getY());
-        				wizards[0].setTargetId(snaffles[o].getSnaffleId());
-        				
-        				wizards[0].setAction(Actions.MOVE);
-        		    	wizards[0].setActionVal(150);
-        			}
-        		}
+    			if (!wizards[0].getToGoal()) {
+    				
+	    			int targId = (int) getNewWizardTarget(arrayPos[0], distWizSnaf[0], snaffles.length);
+	    			
+	    			for (int o = 0; o < snaffles.length; o++) {
+	        			if (targId == snaffles[o].getSnaffleId()) {
+	        				setWizTargetCoords(wizards[0], snaffles[o].getX(), snaffles[o].getY());
+	        				wizards[0].setTargetId(snaffles[o].getSnaffleId());
+	        				
+	        				wizards[0].setAction(Actions.MOVE);
+	        		    	wizards[0].setActionVal(150);
+	        			}
+	        		}
+	    			
+    			}
+    			
     		}
     	}
     	
@@ -590,13 +604,13 @@ class Player {
     		if (wizard.getToGoal()) {
     			double aux = getDistance(wizard.getX(), wizard.getY(), goalX, goalY);
     			
-    			if((wizard.getGoalDist() - aux) == 15) {
+    			//if((wizard.getGoalDist() - aux) == 15) {
     				wizard.setTargetIdDefault();
     				
     				wizard.setToGoal(false);
     				wizard.setAction(Actions.THROW);
     				wizard.setActionVal(200);
-    			}
+    			//}
     		}
     		else {
     			if ((wizard.getState() == Status.GRABBED) && (wizard.getGoalDist() == 17675)) {
